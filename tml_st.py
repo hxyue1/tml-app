@@ -5,23 +5,16 @@ import pickle
 import matplotlib.pyplot as plt
 
 #loading in data and pickled model
-player_features = pd.read_csv('top500_features.csv')
+player_features = pd.read_csv('top100_features.csv')
 player_names = player_features['player_name']
-feature_names = ['player_name', 'player_rank', 'player_log_rank', 'player_rank_points', 'player_log_rank_points', 'player_serve_win_ratio', 'player_return_win_ratio', 'player_bp_per_game', 'player_game_win_ratio', 'player_point_win_ratio', 'player_clutch_factor', 'player_win_rank_weight', 'player_win_elo_weight', 'player_point_win_ratio_rank_weighted', 'player_point_win_ratio_elo_weighted', 'player_old_elo', 'player_game_win_ratio_rank_weighted', 'player_game_win_ratio_elo_weighted']
-player_features = player_features[feature_names]
-model = pickle.load(open('tML_XGB.pickle', 'rb'))
+preds = np.genfromtxt('preds.csv', delimiter=',')
 
 #User interface for player selection
 player1 = st.selectbox('Player 1', index=int(np.where(player_names=='Roger Federer')[0][0]), options=player_features['player_name'])
 player2 = st.selectbox('Player 2', index=int(np.where(player_names=='Rafael Nadal')[0][0]), options=player_features['player_name'])
+player1_w_pred = preds[player_names[player_names == player1].index, player_names[player_names == player2].index ][0]
 
-#Getting features for players
-player1_feats = player_features[player_features['player_name'] == player1].drop('player_name', axis=1).reset_index(drop=True)
-player2_feats = player_features[player_features['player_name'] == player2].drop('player_name', axis=1).reset_index(drop=True)
-feats = player1_feats - player2_feats
-feats = feats.add_suffix('_diff')
-
-player1_w_pred = np.mean([model.predict_proba(feats)[:,1], model.predict_proba(-feats)[:,0]])
+print(player1_w_pred)
 
 fig, ax = plt.subplots(figsize=(10,10))
 
