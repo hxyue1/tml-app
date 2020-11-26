@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 
 @st.cache
 def load_data():
-    data = pd.read_csv('Data/hard_court_final.csv')
+    data = pd.read_csv('hard_court_final.csv')
     data.loc[:,'tourney_start_date'] = pd.to_datetime(data['tourney_start_date'])
-    player_final_features = pd.read_csv('Data/top500_features.csv')
+    player_final_features = pd.read_csv('top500_features.csv')
     return(data, player_final_features)
 
 @st.cache
